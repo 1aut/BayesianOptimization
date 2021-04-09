@@ -8,10 +8,10 @@ class DomainTransformer():
     def __init__(self, **kwargs):
         pass
 
-    def initialize(self, target_space: TargetSpace):
+    def initialize(self, target_space):
         raise NotImplementedError
 
-    def transform(self, target_space: TargetSpace):
+    def transform(self, target_space):
         raise NotImplementedError
 
 
@@ -23,16 +23,16 @@ class SequentialDomainReductionTransformer(DomainTransformer):
 
     def __init__(
         self,
-        gamma_osc: float = 0.7,
-        gamma_pan: float = 1.0,
-        eta: float = 0.9
+        gamma_osc = 0.7,
+        gamma_pan = 1.0,
+        eta = 0.9
     ):
         self.gamma_osc = gamma_osc
         self.gamma_pan = gamma_pan
         self.eta = eta
         pass
 
-    def initialize(self, target_space: TargetSpace):
+    def initialize(self, target_space):
         """Initialize all of the parameters"""
         self.original_bounds = np.copy(target_space.bounds)
         self.bounds = [self.original_bounds]
@@ -58,7 +58,7 @@ class SequentialDomainReductionTransformer(DomainTransformer):
 
         self.r = self.contraction_rate * self.r
 
-    def _update(self, target_space: TargetSpace):
+    def _update(self, target_space):
 
         # setting the previous
         self.previous_optimal = self.current_optimal
@@ -83,7 +83,7 @@ class SequentialDomainReductionTransformer(DomainTransformer):
 
         self.r = self.contraction_rate * self.r
 
-    def _trim(self, new_bounds: np.array, global_bounds: np.array):
+    def _trim(self, new_bounds, global_bounds):
         for i, variable in enumerate(new_bounds):
             if variable[0] < global_bounds[i, 0]:
                 variable[0] = global_bounds[i, 0]
@@ -92,10 +92,10 @@ class SequentialDomainReductionTransformer(DomainTransformer):
 
         return new_bounds
 
-    def _create_bounds(self, parameters: dict, bounds: np.array):
+    def _create_bounds(self, parameters, bounds):
         return {param: bounds[i, :] for i, param in enumerate(parameters)}
 
-    def transform(self, target_space: TargetSpace):
+    def transform(self, target_space):
 
         self._update(target_space)
 
